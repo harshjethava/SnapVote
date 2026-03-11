@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Registration</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+            width: 100%;
+            max-width: 500px;
+            padding: 2.5rem;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #7c3aed;
+            letter-spacing: 2px;
+            margin: 0 auto;
+        }
+        .admin-content h2 {
+            color: #4b5563;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+        .vote-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .vote-form label {
+            font-size: 1.1rem;
+            color: #6d28d9;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+        .vote-form input {
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid #a78bfa;
+            font-size: 1rem;
+            transition: outline-color 0.2s;
+        }
+        .vote-form input:focus {
+            outline: 2px solid #7c3aed;
+            border-color: #7c3aed;
+        }
+        .vote-form button {
+            background: #7c3aed;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 1rem;
+        }
+        .vote-form button:hover {
+            background: #6d28d9;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            color: #4b5563;
+        }
+        .login-link a {
+            color: #7c3aed;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .login-link a:hover {
+            color: #6d28d9;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+
+<div class="main-card">
+    <div class="header">
+        <div class="logo">SNAPVOTE</div>
+    </div>
+    
+    <div class="admin-content">
+        <h2>Admin Registration</h2>
+
+        <form class="vote-form" th:action="@{/admin/admin-register}" method="post">
+            <div style="display: flex; flex-direction: column;">
+                <label>Admin Name</label>
+                <input type="text" name="adminName" placeholder="Enter your full name" required>
+            </div>
+
+            <div style="display: flex; flex-direction: column;">
+                <label>Election Area</label>
+                <input type="text" name="area" placeholder="Enter election region" required>
+            </div>
+
+            <div style="display: flex; flex-direction: column;">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Choose a username" required>
+            </div>
+
+            <div style="display: flex; flex-direction: column;">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Create a password" required>
+                <small style="color: #6b7280; font-size: 0.8rem; margin-top: 0.3rem;">
+                    Min 8 chars, must include A-Z, a-z, 0-9, and @$!%*?&
+                </small>
+            </div>
+
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(124, 58, 237, 0.05); border-left: 4px solid #7c3aed; border-radius: 4px;">
+                <p style="margin-top: 0; font-size: 0.9rem; color: #4b5563; font-weight: 500;">If this Election Area already exists, you MUST provide the credentials of an existing admin to join it:</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <div>
+                        <label style="font-size: 0.9rem;">Existing Admin Username</label>
+                        <input type="text" name="existingAdminUsername" placeholder="Optional for new areas" style="width: 90%; padding: 0.6rem; margin-top: 0.2rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.9rem;">Existing Admin Password</label>
+                        <input type="password" name="existingAdminPassword" placeholder="Optional for new areas" style="width: 90%; padding: 0.6rem; margin-top: 0.2rem;">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">Register Admin</button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a th:href="@{/admin/admin-login}">Login here</a>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var successMsg = /*[[${msg}]]*/ null;
+    var errorMsg = /*[[${error}]]*/ null;
+
+    if (successMsg) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Welcome!',
+            text: successMsg,
+            confirmButtonColor: '#7c3aed'
+        }).then(() => {
+            // Optional: Redirect to login manually after success
+            window.location.href = '/admin/admin-login';
+        });
+    }
+
+    if (errorMsg) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Registration Failed',
+            text: errorMsg,
+            confirmButtonColor: '#d33'
+        });
+    }
+    /*]]>*/
+</script>
+
+</body>
+</html>
+

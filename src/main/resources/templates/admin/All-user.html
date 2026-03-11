@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All Registered Users</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .main-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+            max-width: 1000px;
+            min-width: 1000px;
+            margin: 2.5vh auto;
+            padding: 2rem 2.5rem 2rem 2.5rem;
+            position: relative;
+            min-height: 80vh;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #7c3aed;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav {
+            display: flex;
+            gap: 2.5rem;
+        }
+        .nav a {
+            text-decoration: none;
+            color: #6d28d9;
+            font-weight: 500;
+            font-size: 1.08rem;
+            transition: color 0.2s;
+        }
+        .nav a:hover {
+            color: #a78bfa;
+        }
+        h2 {
+            text-align: center;
+            color: #7c3aed;
+            margin-bottom: 2rem;
+        }
+        table {
+            width: 100%;
+            margin: 0 auto 20px;
+            border-collapse: collapse;
+            background: #f3f4f6;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 1.05rem;
+        }
+        th {
+            background-color: #7c3aed;
+            color: white;
+        }
+        tr:nth-child(even) td {
+            background: #ede9fe;
+        }
+        tr:hover td {
+            background: #e0e7ff;
+        }
+    </style>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+<div class="main-card">
+    <div class="header">
+        <div class="logo">
+            ADMIN
+        </div>
+        <nav class="nav">
+            <a th:href="@{/admin/admin-dashboard}" th:style="${activePage == 'home'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Home</a>
+            <a th:href="@{/admin/All-user}" th:style="${activePage == 'users'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">User Detail</a>
+            <a th:href="@{/admin/toggle-vote}" th:style="${activePage == 'voting'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Voting</a>
+            <a th:href="@{/admin/add-party}" th:style="${activePage == 'add-party'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Add Party</a>
+            <a th:href="@{/admin/party-detail}" th:style="${activePage == 'party-detail'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Party Detail</a>
+            <a th:href="@{/admin/contact-messages}" th:style="${activePage == 'contact'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Contact</a>
+            <a th:href="@{/admin/about}" th:style="${activePage == 'about'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">About</a>
+            <a th:href="@{/admin/logout}">Logout</a>
+        </nav>
+    </div>
+    <h2>All Registered Users</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Email</th>
+            <th>Has Voted?</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.fullName}">Full Name</td>
+            <td th:text="${user.address}">Address</td>
+            <td th:text="${user.phoneNumber}">Phone Number</td>
+            <td th:text="${user.gender}">Gender</td>
+            <td th:text="${user.DOB} != null ? ${#temporals.format(user.DOB, 'dd-MM-yyyy')} : 'N/A'">DOB</td>
+            <td th:text="${user.email}">Email</td>
+            <td th:text="${user.hasVoted} ? 'Yes' : 'No'">No</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+

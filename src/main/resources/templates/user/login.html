@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Login</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+            width: 100%;
+            max-width: 450px;
+            padding: 2.5rem;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: #7c3aed;
+            letter-spacing: 2px;
+        }
+        h2 {
+            color: #4b5563;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            font-size: 1.4rem;
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .login-form label {
+            font-size: 1.1rem;
+            color: #6d28d9;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+        .login-form input {
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid #a78bfa;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .login-form input:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+        .login-form button {
+            background: #7c3aed;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 1rem;
+        }
+        .login-form button:hover {
+            background: #6d28d9;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            color: #4b5563;
+        }
+        .register-link a {
+            color: #7c3aed;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s;
+            margin-left: 0.3rem;
+        }
+        .register-link a:hover {
+            color: #6d28d9;
+        }
+
+        /* OTP MODAL */
+        .otp-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(60, 60, 80, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .otp-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 100%;
+            max-width: 380px;
+        }
+        .otp-box h3 {
+            color: #7c3aed;
+            margin-bottom: 1rem;
+        }
+        .otp-box p {
+            color: #4b5563;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+
+<div class="main-card">
+    <div class="header">
+        <div class="logo">SNAPVOTE</div>
+    </div>
+
+    <h2>User Login</h2>
+
+    <form class="login-form" th:action="@{/public/login}" method="post">
+        <div style="display: flex; flex-direction: column;">
+            <label>Election Area</label>
+            <input type="text" name="area" placeholder="Enter election region" required>
+        </div>
+
+        <div style="display: flex; flex-direction: column;">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Username" required>
+        </div>
+
+        <div style="display: flex; flex-direction: column;">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+
+        <button type="submit">Send OTP</button>
+    </form>
+
+    <div class="register-link">
+        Don't have an account? <a th:href="@{/public/register}">Register here</a>
+    </div>
+</div>
+
+<!-- OTP MODAL -->
+<div th:if="${step == 'otp'}" class="otp-overlay">
+    <div class="otp-box">
+        <h3>Enter OTP</h3>
+        <p>Security check! An OTP has been sent to your registered email addressing. Please enter it below.</p>
+
+        <form class="login-form" th:action="@{/public/verify-otp}" method="post">
+            <input type="text" name="otp" placeholder="Enter 6-digit OTP" required maxlength="6" style="text-align: center; font-size: 1.2rem; letter-spacing: 4px;">
+            <button type="submit" style="margin-top: 1.5rem; width: 100%;">Verify & Login</button>
+        </form>
+        
+        <div th:if="${error}" style="color: #dc2626; margin-top: 1rem; font-size: 0.9rem;">
+            <p th:text="${error}"></p>
+        </div>
+        
+        <a th:href="@{/public/login}" style="display: block; margin-top: 1.5rem; color: #6b7280; text-decoration: none; font-size: 0.9rem;">Cancel</a>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var errorMsg = /*[[${error}]]*/ null;
+    var currentStep = /*[[${step}]]*/ 'login';
+
+    if (errorMsg && currentStep === 'login') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: errorMsg,
+            confirmButtonColor: '#d33'
+        });
+    }
+    /*]]>*/
+</script>
+
+</body>
+</html>
+

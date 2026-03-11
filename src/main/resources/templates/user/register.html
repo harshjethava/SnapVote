@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Registration</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+        .main-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+            width: 100%;
+            max-width: 700px;
+            padding: 2.5rem;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: #7c3aed;
+            letter-spacing: 2px;
+        }
+        h2 {
+            color: #4b5563;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .form-row {
+            display: flex;
+            gap: 1.2rem;
+            width: 100%;
+        }
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .register-form label {
+            font-size: 1.05rem;
+            color: #6d28d9;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+        }
+        .register-form input, 
+        .register-form select {
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid #a78bfa;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: #fff;
+        }
+        .register-form input:focus,
+        .register-form select:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+        .register-form button {
+            background: #7c3aed;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.9rem 1.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 1rem;
+            width: 60%;
+            align-self: center;
+        }
+        .register-form button:hover {
+            background: #6d28d9;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            color: #4b5563;
+        }
+        .login-link a {
+            color: #7c3aed;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s;
+            margin-left: 0.3rem;
+        }
+        .login-link a:hover {
+            color: #6d28d9;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+
+<div class="main-card">
+    <div class="header">
+        <div class="logo">SNAPVOTE</div>
+    </div>
+    
+    <h2>User Registration</h2>
+
+    <form class="register-form" th:action="@{/public/register}" method="post" th:object="${user}">
+        
+        <div class="form-group">
+            <label>Election Area</label>
+            <input type="text" name="area" placeholder="Enter your election area" required />
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="fullName" placeholder="Your full name" required />
+            </div>
+            <div class="form-group">
+                <label>Address</label>
+                <input type="text" name="address" placeholder="Your address" required />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" name="phoneNumber" placeholder="Your contact number" required />
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select th:field="*{gender}" required>
+                    <option value="">-- Select Gender --</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Date of Birth</label>
+                <input type="date" th:field="*{DOB}" required />
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" th:field="*{email}" placeholder="example@mail.com" required />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" th:field="*{username}" placeholder="Choose a username" required />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" th:field="*{password}" placeholder="Create a password" required />
+                <small style="color: #6b7280; font-size: 0.8rem; margin-top: 0.3rem;">
+                    Min 8 chars, must include A-Z, a-z, 0-9, and @$!%*?&
+                </small>
+            </div>
+        </div>
+
+        <input type="hidden" th:field="*{hasVoted}" />
+
+        <button type="submit">Create Account</button>
+    </form>
+
+    <div class="login-link">
+        Already have an account? <a th:href="@{/public/login}">Login here</a>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var errorMsg = /*[[${error}]]*/ null;
+
+    if (errorMsg) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Registration Failed',
+            text: errorMsg,
+            confirmButtonColor: '#d33'
+        });
+    }
+    /*]]>*/
+</script>
+
+</body>
+</html>

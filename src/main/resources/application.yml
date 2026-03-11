@@ -1,0 +1,41 @@
+spring:
+    profiles:
+      active: dev
+
+    mail:
+      host: smtp.gmail.com
+      port: 587
+      username: stduy21@gmail.com
+      password: sxwi rmld xrez tnnh
+      properties:
+        mail:
+          smtp:
+            auth: ture
+            starttls:
+              enable: true
+            connectiontimeout: 5000
+            timeout: 5000
+            writetimeout: 5000
+
+    spring:
+      thymeleaf:
+        prefix: classpath:/templates/
+        suffix: .html
+        enabled: true
+        mode: HTML
+        encoding: UTF-8
+        cache: false
+
+      mvc:
+        view:
+          prefix: /
+          suffix: .html
+
+
+logging:
+  level:
+    net:
+      SnapVote: TRACE
+
+random_user:
+  api: https://randomuser.me/api/

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Toggle Voting</title>
+  <style>
+    body {
+      background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .main-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+      max-width: 1000px;
+      min-width: 1000px;
+      margin: 2.5vh auto;
+      padding: 2rem 2.5rem 2rem 2.5rem;
+      position: relative;
+      min-height: 80vh;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #7c3aed;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav {
+      display: flex;
+      gap: 2.5rem;
+    }
+    .nav a {
+      text-decoration: none;
+      color: #6d28d9;
+      font-weight: 500;
+      font-size: 1.08rem;
+      transition: color 0.2s;
+    }
+    .nav a:hover {
+      color: #a78bfa;
+    }
+    .admin-content {
+      margin-top: 2.5rem;
+      color: #4b5563;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    .vote-form {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+    }
+    .vote-form label {
+      font-size: 1.1rem;
+      color: #6d28d9;
+      font-weight: 500;
+    }
+    .vote-form select {
+      padding: 0.4rem 1.2rem;
+      border-radius: 8px;
+      border: 1px solid #a78bfa;
+      font-size: 1rem;
+    }
+    .vote-form button {
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.8rem;
+      font-size: 1.08rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .vote-form button:hover {
+      background: #6d28d9;
+    }
+    .vote-form-btn {
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.8rem;
+      font-size: 1.08rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 1.2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      width: 100%;
+      max-width: 260px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .vote-form-btn:hover {
+      background: #6d28d9;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+  <div class="main-card">
+    <div class="header">
+      <div class="logo">
+          ADMIN
+      </div>
+      <nav class="nav">
+        <a th:href="@{/admin/admin-dashboard}" th:style="${activePage == 'home'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Home</a>
+        <a th:href="@{/admin/All-user}" th:style="${activePage == 'users'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">User Detail</a>
+        <a th:href="@{/admin/toggle-vote}" th:style="${activePage == 'voting'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Voting</a>
+        <a th:href="@{/admin/add-party}" th:style="${activePage == 'add-party'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Add Party</a>
+        <a th:href="@{/admin/party-detail}" th:style="${activePage == 'party-detail'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Party Detail</a>
+        <a th:href="@{/admin/contact-messages}" th:style="${activePage == 'contact'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Contact</a>
+        <a th:href="@{/admin/about}" th:style="${activePage == 'about'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">About</a>
+        <a th:href="@{/admin/logout}">Logout</a>
+      </nav>
+    </div>
+    <div class="admin-content">
+      <h2 style="color:#7c3aed;">Voting Control</h2>
+      <form class="vote-form" th:action="@{/admin/toggle-vote}" method="post">
+        <label>Voting Status:</label>
+        <select name="status">
+          <option th:value="true" th:selected="${voteStatus == true}">Start Voting</option>
+          <option th:value="false" th:selected="${voteStatus == false}">Stop Voting</option>
+        </select>
+        <button type="submit" onclick="confirmToggle(event)">Update Status</button>
+      </form>
+
+      <!-- ✅ Show result button when voting is closed -->
+      <form th:if="${!voteStatus}" th:action="@{/admin/show-result}" method="post">
+        <button type="submit" class="vote-form-btn" onclick="showResultAlert(event)">View Result</button>
+      </form>
+
+      <!-- ✅ Show winning party -->
+      <div th:if="${winner != null}" class="result-box">
+        <h2>🎉 Voting Winner 🎉</h2>
+        <p><strong th:text="'Party: ' + ${winner.name}"></strong></p>
+        <p><strong th:text="'Votes: ' + ${winner.voteCount}"></strong></p>
+      </div>
+
+      <!-- ✅ Show this only when voting is open -->
+      <form th:if="${voteStatus}" th:action="@{/admin/remind-users}" method="post">
+        <button type="submit" class="vote-form-btn" onclick="confirmReminder(event)">Send Reminder to Non-Voters</button>
+      </form>
+
+    </div>
+  </div>
+
+  <script>
+    function confirmToggle(event) {
+      event.preventDefault();
+
+      Swal.fire({
+        icon: 'question',
+        title: 'Confirm Status Change',
+        text: 'Are you sure you want to update the voting status?',
+        showCancelButton: true,
+        confirmButtonColor: '#7c3aed',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, update it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          event.target.closest('form').submit();
+        }
+      });
+    }
+
+    function showResultAlert(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      icon: 'info',
+      title: 'Loading Result...',
+      text: 'Please wait while we fetch the voting result.',
+      timer: 2000,
+      showConfirmButton: false,
+      didClose: () => {
+        event.target.closest('form').submit();
+      }
+    });
+    }
+
+    function confirmReminder(event) {
+    event.preventDefault();
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Send Reminder?',
+      text: 'This will notify all users who have not voted yet.',
+      showCancelButton: true,
+      confirmButtonColor: '#7c3aed',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, send it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        event.target.closest('form').submit();
+      }
+    });
+  }
+  </script>
+
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    var successMsg = /*[[${successMsg}]]*/ null;
+    var infoMsg = /*[[${infoMsg}]]*/ null;
+
+    if (successMsg) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: successMsg,
+        confirmButtonColor: '#7c3aed'
+      });
+    }
+
+    if (infoMsg) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Information',
+        text: infoMsg,
+        confirmButtonColor: '#7c3aed'
+      });
+    }
+    /*]]>*/
+  </script>
+</body>
+</html>
+

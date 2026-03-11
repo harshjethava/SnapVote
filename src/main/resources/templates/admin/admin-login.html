@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Login</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+            width: 100%;
+            max-width: 450px;
+            padding: 2.5rem;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: #7c3aed;
+            letter-spacing: 2px;
+        }
+        .admin-content h2 {
+            color: #4b5563;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            font-size: 1.4rem;
+        }
+        .vote-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .vote-form label {
+            font-size: 1.1rem;
+            color: #6d28d9;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+        .vote-form input {
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid #a78bfa;
+            font-size: 1rem;
+            transition: outline-color 0.2s;
+        }
+        .vote-form input:focus {
+            outline: 2px solid #7c3aed;
+            border-color: #7c3aed;
+        }
+        .vote-form button {
+            background: #7c3aed;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 1rem;
+        }
+        .vote-form button:hover {
+            background: #6d28d9;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            color: #4b5563;
+        }
+        .login-link a {
+            color: #7c3aed;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .login-link a:hover {
+            color: #6d28d9;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+
+<div class="main-card">
+    <div class="header">
+        <div class="logo">SNAPVOTE</div>
+    </div>
+
+    <div class="admin-content">
+        <h2>Admin Login</h2>
+
+        <form class="vote-form" th:action="@{/admin/admin-login}" method="post">
+            <div style="display: flex; flex-direction: column;">
+                <label>Election Area</label>
+                <input type="text" name="area" placeholder="Enter election region" required>
+            </div>
+
+            <div style="display: flex; flex-direction: column;">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+
+            <div style="display: flex; flex-direction: column;">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="login-link">
+            Don't have an admin account? <a th:href="@{/admin/admin-register}">Register here</a>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var errorMsg = /*[[${error}]]*/ null;
+
+    if (errorMsg) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: errorMsg,
+            confirmButtonColor: '#d33'
+        });
+    }
+    /*]]>*/
+</script>
+
+</body>
+</html>
+

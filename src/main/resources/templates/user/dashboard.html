@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Dashboard</title>
+    <style>
+      body {
+        background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+        font-family: 'Segoe UI', Arial, sans-serif;
+        margin: 0;
+        min-height: 100vh;
+        overflow: hidden;
+      }
+      .main-card {
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+        max-width: 900px;
+        margin: 2.5vh auto;
+        padding: 2rem 2.5rem 2rem 2.5rem;
+        position: relative;
+        min-height: 80vh;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+      }
+      .logo {
+        font-weight: bold;
+        font-size: 1.5rem;
+        color: #7c3aed;
+        letter-spacing: 2px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .nav {
+        display: flex;
+        gap: 2.5rem;
+      }
+      .nav a {
+        text-decoration: none;
+        color: #6d28d9;
+        font-weight: 500;
+        font-size: 1.08rem;
+        transition: color 0.2s;
+      }
+      .nav a:hover {
+        color: #a78bfa;
+      }
+      .illustration {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 2.5rem;
+        margin-bottom: 2.5rem;
+      }
+      .vote-box {
+        background: #fef9c3;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        padding: 1.2rem 2rem;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #444;
+        margin: 0 1.5rem;
+      }
+      .illustration .person {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 1.1rem;
+        color: #6d28d9;
+      }
+      .illustration .device {
+        background: #ede9fe;
+        border-radius: 16px;
+        padding: 1.5rem 1.2rem;
+        min-width: 120px;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        color: #7c3aed;
+        box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+      }
+      .main-title {
+        color: #7c3aed;
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-align: left;
+      }
+      .main-desc {
+        color: #6b7280;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        text-align: left;
+      }
+      .actions {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .actions button, .actions .edit-btn {
+        min-width: 110px;
+        padding: 0.7rem 0;
+        background: linear-gradient(90deg, #6366f1 0%, #818cf8 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.13);
+        transition: all 0.3s ease;
+      }
+      .actions button:hover, .actions .edit-btn:hover {
+        background: linear-gradient(90deg, #818cf8 0%, #6366f1 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.18);
+      }
+      .logout-btn {
+        background: linear-gradient(90deg, #ef4444 0%, #b91c1c 100%);
+      }
+      .logout-btn:hover {
+        background: linear-gradient(90deg, #b91c1c 0%, #ef4444 100%);
+      }
+      .info-section {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2.5rem;
+        gap: 2rem;
+      }
+      .info-card {
+        flex: 1;
+        background: #f3f4f6;
+        border-radius: 14px;
+        padding: 1.2rem 1.5rem;
+        text-align: center;
+        color: #4b5563;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      }
+      .info-card strong {
+        color: #7c3aed;
+        font-size: 1.1rem;
+      }
+    </style>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+  <div class="main-card">
+    <div class="header">
+      <div class="logo">
+        <span th:text="${userName}"></span>
+      </div>
+      <nav class="nav">
+        <a th:href="@{/public/dashboard}" th:style="${activePage == 'home'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Home</a>
+        <a th:href="@{/user/about}" th:style="${activePage == 'about'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">About</a>
+        <a th:href="@{/user/vote}" th:style="${activePage == 'vote'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Add Vote</a>
+        <a th:href="@{/user/user-details}" th:style="${activePage == 'info'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Info</a>
+        <a th:href="@{/user/contact}" th:style="${activePage == 'contact'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Contact</a>
+        <a th:href="@{/logout}">Logout</a>
+      </nav>
+    </div>
+
+    <div class="illustration">
+      <div style="display: flex; align-items: center; gap: 2.5rem; width: 100%;">
+        <div style="flex: 1;">
+          <div th:if="${winnerName}" style="display:flex; justify-content:center; margin-bottom:1.5rem;">
+            <div style="background:#ede9fe; border-radius:14px; box-shadow:0 2px 8px rgba(124,58,237,0.10); padding:1.5rem 1.2rem; max-width:480px; width:100%; text-align:center; display:flex; flex-direction:column; align-items:center; min-height: 70px;">
+              <span style="color:#7c3aed; font-size:1.1rem; font-weight:700;">🏆 Winner Declared!</span>
+              <span style="color:#4b5563; font-size:1rem;">The winner is:</span>
+              <span style="color:#7c3aed; font-size:1.4rem; font-weight:800; letter-spacing:1px;" th:text="${winnerName}">Winner Name</span>
+            </div>
+          </div>
+          <h2 style="color:#7c3aed; font-size:2.2rem; margin-bottom:0.7rem; font-weight:700; letter-spacing:1px;">Why Online Voting?</h2>
+          <p style="color:#4b5563; font-size:1.18rem; margin-bottom:1.2rem; line-height:1.7; max-width: 480px; font-weight:500;">Online voting is revolutionizing the way we participate in elections. It allows eligible voters to cast their ballots securely from anywhere, using their computers or mobile devices. This not only increases accessibility for people with disabilities or those living far from polling stations, but also helps reduce long queues and paperwork.</p>
+                  </div>
+        <img src="/images/voting.jpg" alt="Voting Illustration" style="width: 100%; max-width: 420px; height: 460px; border-radius:18px; box-shadow:0 4px 18px rgba(124,58,237,0.10); object-fit:cover; background:#ede9fe;" />
+      </div>
+    </div>
+   
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Contact Messages</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .main-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+            max-width: 1000px;
+            min-width: 1000px;
+            margin: 2.5vh auto;
+            padding: 2rem 2.5rem;
+            position: relative;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #7c3aed;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav {
+            display: flex;
+            gap: 2.5rem;
+        }
+        .nav a {
+            text-decoration: none;
+            color: #6d28d9;
+            font-weight: 500;
+            font-size: 1.08rem;
+            transition: color 0.2s;
+        }
+        .nav a:hover {
+            color: #a78bfa;
+        }
+        h2 {
+            text-align: center;
+            color: #7c3aed;
+            margin-bottom: 2rem;
+            font-size: 1.6rem;
+        }
+        .table-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: #f3f4f6;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        th {
+            background-color: #7c3aed;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:nth-child(even) {
+            background-color: #ede9fe;
+        }
+        tr:hover {
+            background-color: #f5f3ff;
+        }
+        .message-cell {
+            max-width: 300px;
+            word-wrap: break-word;
+            font-size: 0.95rem;
+            color: #4b5563;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #9ca3af;
+            font-size: 1.1rem;
+        }
+    </style>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+<div class="main-card">
+    <div class="header">
+        <div class="logo">
+            ADMIN
+        </div>
+        <nav class="nav">
+            <a th:href="@{/admin/admin-dashboard}" th:style="${activePage == 'home'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Home</a>
+            <a th:href="@{/admin/All-user}" th:style="${activePage == 'users'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">User Detail</a>
+            <a th:href="@{/admin/toggle-vote}" th:style="${activePage == 'voting'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Voting</a>
+            <a th:href="@{/admin/add-party}" th:style="${activePage == 'add-party'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Add Party</a>
+            <a th:href="@{/admin/party-detail}" th:style="${activePage == 'party-detail'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Party Detail</a>
+            <a th:href="@{/admin/contact-messages}" th:style="${activePage == 'contact'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Contact</a>
+            <a th:href="@{/admin/about}" th:style="${activePage == 'about'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">About</a>
+            <a th:href="@{/admin/logout}">Logout</a>
+        </nav>
+    </div>
+    <h2>User Contact Messages</h2>
+    
+    <div class="table-container">
+        <div th:if="${#lists.isEmpty(messages)}" class="empty-state">
+            <p>No contact messages found for this area.</p>
+        </div>
+        
+        <table th:unless="${#lists.isEmpty(messages)}">
+            <thead>
+            <tr>
+                <th style="width: 15%;">Name</th>
+                <th style="width: 20%;">Email</th>
+                <th style="width: 20%;">Subject</th>
+                <th style="width: 45%;">Message</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="msg : ${messages}">
+                <td th:text="${msg.name}" style="font-weight: 600; color: #4b5563;">John Doe</td>
+                <td th:text="${msg.email}" style="color: #6d28d9;">john@example.com</td>
+                <td th:text="${msg.subject}" style="font-weight: 500;">Inquiry</td>
+                <td th:text="${msg.message}" class="message-cell">Hello, I have a question about...</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+

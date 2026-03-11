@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Contact Us</title>
+  <style>
+    body {
+      background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .main-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+      max-width: 900px;
+      margin: 2.5vh auto;
+      padding: 2rem 2.5rem 2rem 2.5rem;
+      position: relative;
+      min-height: 80vh;
+      max-height: 545px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #7c3aed;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav {
+      display: flex;
+      gap: 2.5rem;
+    }
+    .nav a {
+      text-decoration: none;
+      color: #6d28d9;
+      font-weight: 500;
+      font-size: 1.08rem;
+      transition: color 0.2s;
+    }
+    .nav a:hover {
+      color: #a78bfa;
+    }
+    .contact-content {
+      margin-top: 2.5rem;
+      color: #4b5563;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    .contact-form {
+      margin: 1.5rem auto 0 auto;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      background: #e1e1ed;
+      padding: 2rem 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(124,58,237,0.07);
+      max-height: 330px;
+    }
+    .form-row {
+      display: flex;
+      gap: 1.2rem;
+      width: 100%;
+    }
+    .form-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .contact-form label {
+      font-size: 1.08rem;
+      color: #6d28d9;
+      font-weight: 500;
+      text-align: left;
+      margin-bottom: 0.1rem;
+    }
+    .contact-form input,
+    .contact-form textarea {
+      padding: 0.5rem 0.3rem;
+      border-radius: 8px;
+      border: 1.5px solid #a78bfa;
+      font-size: 1rem;
+      font-family: inherit;
+      resize: none;
+      width: 100%;
+      background: rgba(243, 244, 246, 0.9);
+      transition: all 0.3s ease;
+    }
+    .contact-form textarea {
+      min-height: 60px;
+    }
+    .contact-form input:focus, .contact-form textarea:focus {
+      border: 1.5px solid #7c3aed;
+      outline: none;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.10);
+    }
+    .contact-form button {
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 1.8rem;
+      font-size: 1.08rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 0.5rem;
+      width: 60%;
+      align-self: center;
+    }
+    .contact-form button:hover {
+      background: #6d28d9;
+    }
+  </style>
+  <script>
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+    }
+  </script>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+  <div class="main-card">
+    <div class="header">
+      <div class="logo">
+        <span th:text="${userName}"></span>
+      </div>
+      <nav class="nav">
+        <a th:href="@{/public/dashboard}" th:style="${activePage == 'home'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Home</a>
+        <a th:href="@{/user/about}" th:style="${activePage == 'about'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">About</a>
+        <a th:href="@{/user/vote}" th:style="${activePage == 'vote'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Add Vote</a>
+        <a th:href="@{/user/user-details}" th:style="${activePage == 'info'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Info</a>
+        <a th:href="@{/user/contact}" th:style="${activePage == 'contact'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Contact</a>
+        <a th:href="@{/logout}">Logout</a>
+      </nav>
+    </div>
+    <div class="contact-content">
+      <h2 style="color:#7c3aed; margin-top: -20px;">Contact Us</h2>
+      <p style="margin-top: -10px;">Have questions, feedback, or need help? Fill out the form below and we'll get back to you soon!</p>
+      <form class="contact-form" th:action="@{/user/submit-contact}" method="post">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="width:100%;">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required></textarea>
+          </div>
+        </div>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+    
+    <!-- ✅ Success Popup (Controlled by Flash Attribute) -->
+    <div id="popup" th:style="${successPopup != null} ? 'display:flex; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(60,60,80,0.18); align-items:center; justify-content:center; z-index:1000;' : 'display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(60,60,80,0.18); align-items:center; justify-content:center; z-index:1000;'">
+      <div style="background:#fff; border-radius:18px; box-shadow:0 8px 32px rgba(80,80,160,0.18); padding:2.5rem 2.5rem 2rem 2.5rem; min-width:320px; text-align:center;">
+        <h3 style="color:#7c3aed; margin-bottom:1.2rem;">Thank You!</h3>
+        <p style="color:#4b5563; font-size:1.1rem; margin-bottom:1.5rem;">Your message has been submitted successfully.<br>We will get back to you soon.</p>
+        <button onclick="closePopup()" style="background:#7c3aed; color:#fff; border:none; border-radius:8px; padding:0.6rem 1.5rem; font-size:1.05rem; font-weight:500; cursor:pointer;">Close</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

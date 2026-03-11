@@ -1,0 +1,28 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< net.SnapVote:snapVote >------------------------
+[INFO] Building SnapVote 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ snapVote ---
+[INFO] Deleting D:\Stduy\Spring Boot\snapVote\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ snapVote ---
+[INFO] Copying 4 resources from src\main\resources to target\classes
+[INFO] Copying 16 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ snapVote ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 31 source files with javac [debug parameters release 20] to target\classes
+[WARNING] /D:/Stduy/Spring Boot/snapVote/src/main/java/net/SnapVote/snapVote/model/Admin.java:[22,20] @Builder will ignore the initializing expression entirely. If you want the initializing expression to serve as default, add @Builder.Default. If it is not supposed to be settable during building, make the field final.
+[WARNING] /D:/Stduy/Spring Boot/snapVote/src/main/java/net/SnapVote/snapVote/model/User.java:[30,21] @Builder will ignore the initializing expression entirely. If you want the initializing expression to serve as default, add @Builder.Default. If it is not supposed to be settable during building, make the field final.
+[WARNING] /D:/Stduy/Spring Boot/snapVote/src/main/java/net/SnapVote/snapVote/model/Party.java:[24,17] @Builder will ignore the initializing expression entirely. If you want the initializing expression to serve as default, add @Builder.Default. If it is not supposed to be settable during building, make the field final.
+[INFO] /D:/Stduy/Spring Boot/snapVote/src/main/java/net/SnapVote/snapVote/config/SnapVoteSecurity.java: D:\Stduy\Spring Boot\snapVote\src\main\java\net\SnapVote\snapVote\config\SnapVoteSecurity.java uses or overrides a deprecated API.
+[INFO] /D:/Stduy/Spring Boot/snapVote/src/main/java/net/SnapVote/snapVote/config/SnapVoteSecurity.java: Recompile with -Xlint:deprecation for details.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.835 s
+[INFO] Finished at: 2026-03-10T19:35:05+05:30
+[INFO] ------------------------------------------------------------------------

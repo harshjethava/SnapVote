@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>User Details</title>
+  <style>
+    body {
+      background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+
+      overflow: hidden;
+    }
+    .main-card {
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+        max-width: 900px;
+        margin: 2.5vh auto;
+        padding: 2rem 2.5rem 2rem 2.5rem;
+        position: relative;
+        min-height: 80vh;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #7c3aed;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav {
+      display: flex;
+      gap: 2.5rem;
+    }
+    .nav a {
+      text-decoration: none;
+      color: #6d28d9;
+      font-weight: 500;
+      font-size: 1.08rem;
+      transition: color 0.2s;
+    }
+    .nav a:hover {
+      color: #a78bfa;
+    }
+    .info-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+      width: 100%;
+    }
+    .info-row {
+      display: flex;
+      gap: 1.2rem;
+      width: 100%;
+    }
+    .info-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .info-card {
+      background: #f3f4f6;
+      border-radius: 14px;
+      padding: 1.2rem 1.5rem;
+      text-align: left;
+      color: #4b5563;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .info-card strong {
+      color: #7c3aed;
+      font-size: 1.1rem;
+    }
+    .info-value {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      min-width: 0;
+    }
+    .edit-btn {
+      background:#7c3aed; color:#fff; border:none; border-radius:6px; padding:0.3rem 1rem; font-size:0.98rem; font-weight:500; cursor:pointer; margin-left:0.5rem;
+      transition: background 0.2s;
+    }
+    .edit-btn:hover { background: #6d28d9; }
+    .save-btn {
+      background:#22c55e; color:#fff; border:none; border-radius:6px; padding:0.3rem 1rem; font-size:0.98rem; font-weight:500; margin-right:0.5rem; cursor:pointer;
+    }
+    .cancel-btn {
+      background:#ef4444; color:#fff; border:none; border-radius:6px; padding:0.3rem 1rem; font-size:0.98rem; font-weight:500; cursor:pointer;
+    }
+  </style>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+  <div class="main-card">
+    <div class="header">
+      <div class="logo">
+        <span th:text="${userName}"></span>
+      </div>
+      <nav class="nav">
+        <a th:href="@{/public/dashboard}" th:style="${activePage == 'home'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Home</a>
+        <a th:href="@{/user/about}" th:style="${activePage == 'about'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">About</a>
+        <a th:href="@{/user/vote}" th:style="${activePage == 'vote'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Add Vote</a>
+        <a th:href="@{/user/user-details}" th:style="${activePage == 'info'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Info</a>
+        <a th:href="@{/user/contact}" th:style="${activePage == 'contact'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Contact</a>
+        <a th:href="@{/logout}">Logout</a>
+
+      </nav>
+    </div>
+    <div class="info-section">
+      <div class="info-row">
+        <div class="info-group info-card">
+          <strong>Full Name:</strong>
+          <div class="info-value">
+            <span th:text="${user.fullName}">N/A</span>
+          </div>
+        </div>
+        <div class="info-group info-card">
+          <strong>Address:</strong>
+          <div class="info-value" id="address-container">
+            <span id="address-value" th:text="${user.address}">N/A</span>
+            <button class="edit-btn" onclick="editField('address')">Edit</button>
+          </div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-group info-card">
+          <strong>Phone Number:</strong>
+          <div class="info-value" id="phone-container">
+            <span id="phone-value" th:text="${user.phoneNumber}">N/A</span>
+            <button class="edit-btn" onclick="editField('phone')">Edit</button>
+          </div>
+        </div>
+        <div class="info-group info-card">
+          <strong>Gender:</strong>
+          <div class="info-value">
+            <span th:text="${user.gender}">N/A</span>
+          </div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-group info-card">
+          <strong>Date of Birth:</strong>
+          <div class="info-value">
+            <span th:text="${user.DOB} != null ? ${#temporals.format(user.DOB, 'dd-MM-yyyy')} : 'N/A'"></span>
+          </div>
+        </div>
+        <div class="info-group info-card">
+          <strong>Email:</strong>
+          <div class="info-value" id="email-container">
+            <span id="email-value" th:text="${user.email}">N/A</span>
+            <button class="edit-btn" onclick="editField('email')">Edit</button>
+          </div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-group info-card">
+          <strong>Username:</strong>
+          <span th:text="${user.username}">N/A</span>
+        </div>
+        <div class="info-group info-card">
+          <strong>Has Voted:</strong>
+          <span th:text="${user.hasVoted} ? 'Yes' : 'No'">N/A</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let editing = null;
+    function editField(field) {
+      if (editing) return;
+      editing = field;
+      let container = document.getElementById(field+'-container');
+      let valueSpan = document.getElementById(field+'-value');
+      let currentValue = valueSpan.textContent;
+      valueSpan.style.display = 'none';
+      let input = document.createElement('input');
+      input.type = (field === 'email') ? 'email' : 'text';
+      input.value = currentValue;
+      input.style = 'margin-right:0.7rem; padding:0.4rem 0.7rem; border-radius:6px; border:1.5px solid #a78bfa; font-size:1rem; width:60%';
+      input.id = field+'-input';
+      container.insertBefore(input, valueSpan);
+      container.children[2].style.display = 'none'; // Hide Edit button
+
+      // Save button
+      let saveBtn = document.createElement('button');
+      saveBtn.textContent = 'Save';
+      saveBtn.type = 'button';
+      saveBtn.className = 'save-btn';
+      saveBtn.onclick = function() { submitUpdate(field, input.value); };
+
+      // Cancel button
+      let cancelBtn = document.createElement('button');
+      cancelBtn.textContent = 'Cancel';
+      cancelBtn.type = 'button';
+      cancelBtn.className = 'cancel-btn';
+      cancelBtn.onclick = function() { cancelEdit(field, currentValue); };
+      container.appendChild(saveBtn);
+      container.appendChild(cancelBtn);
+    }
+    function cancelEdit(field, value) {
+      let container = document.getElementById(field+'-container');
+      let valueSpan = document.getElementById(field+'-value');
+      let input = document.getElementById(field+'-input');
+      if (input) container.removeChild(input);
+      container.children[1].style.display = '';
+      valueSpan.style.display = '';
+
+      // Remove Save/Cancel
+      container.removeChild(container.lastChild);
+      container.removeChild(container.lastChild);
+      editing = null;
+    }
+    function submitUpdate(field, value) {
+
+      // Create a form and submit via POST
+      let form = document.createElement('form');
+      form.method = 'post';
+      form.action = '/user/update-detail';
+      let fieldInput = document.createElement('input');
+      fieldInput.type = 'hidden';
+      fieldInput.name = 'field';
+      fieldInput.value = field;
+      let valueInput = document.createElement('input');
+      valueInput.type = 'hidden';
+      valueInput.name = 'value';
+      valueInput.value = value;
+      form.appendChild(fieldInput);
+      form.appendChild(valueInput);
+      document.body.appendChild(form);
+      form.submit();
+    }
+  </script>
+</body>
+</html> 

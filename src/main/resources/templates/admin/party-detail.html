@@ -1,0 +1,161 @@
+  <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Party Details</title>
+  <style>
+    body {
+      background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .main-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+      max-width: 1000px;
+      min-width: 1000px;
+      margin: 2.5vh auto;
+      padding: 2rem 2.5rem 2rem 2.5rem;
+      position: relative;
+      min-height: 80vh;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #7c3aed;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav {
+      display: flex;
+      gap: 2.5rem;
+    }
+    .nav a {
+      text-decoration: none;
+      color: #6d28d9;
+      font-weight: 500;
+      font-size: 1.08rem;
+      transition: color 0.2s;
+    }
+    .nav a:hover {
+      color: #a78bfa;
+    }
+    .admin-content {
+      margin-top: 2.5rem;
+      color: #4b5563;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    table.party-table {
+      width: 100%;
+      margin: 0 auto 20px;
+      border-collapse: collapse;
+      background: #f3f4f6;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .party-table th, .party-table td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+      font-size: 1.05rem;
+    }
+    .party-table th {
+      background-color: #7c3aed;
+      color: white;
+    }
+    .party-table tr:nth-child(even) td {
+      background: #ede9fe;
+    }
+    .party-table tr:hover td {
+      background: #e0e7ff;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+  <div class="main-card">
+    <div class="header">
+      <div class="logo">
+        ADMIN
+      </div>
+      <nav class="nav">
+        <a th:href="@{/admin/admin-dashboard}" th:style="${activePage == 'home'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Home</a>
+        <a th:href="@{/admin/All-user}" th:style="${activePage == 'users'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">User Detail</a>
+        <a th:href="@{/admin/toggle-vote}" th:style="${activePage == 'voting'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Voting</a>
+        <a th:href="@{/admin/add-party}" th:style="${activePage == 'add-party'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Add Party</a>
+        <a th:href="@{/admin/party-detail}" th:style="${activePage == 'party-detail'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Party Detail</a>
+        <a th:href="@{/admin/contact-messages}" th:style="${activePage == 'contact'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Contact</a>
+        <a th:href="@{/admin/about}" th:style="${activePage == 'about'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">About</a>
+        <a th:href="@{/admin/logout}">Logout</a>
+      </nav>
+    </div>
+    <div class="admin-content">
+      <h2 style="color:#7c3aed;">Party Details</h2>
+      <table class="party-table">
+        <thead>
+          <tr>
+            <th>Party Name</th>
+            <th>Party Symbol</th>
+            <th>Logo</th>
+            <th>Total Votes</th>
+            <th th:if="${winnerDeclared}">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="party : ${parties}">
+            <td th:text="${party.name}">Party Name</td>
+            <td th:text="${party.symbol}">Symbol</td>
+            <td>
+              <img th:if="${party.base64Logo != null}" th:src="${party.base64Logo}" alt="Logo" width="40" height="40" style="border-radius: 50%; object-fit: cover;" />
+            </td>
+            <td th:text="${party.voteCount}">0</td>
+            <td th:if="${winnerDeclared}">
+              <form th:action="@{/admin/delete-party}" method="post" style="margin:0;">
+                <input type="hidden" name="partyName" th:value="${party.name}" />
+                <button type="submit" style="background:#ef4444; color:#fff; border:none; border-radius:6px; padding:0.4rem 1.1rem; font-size:1rem; font-weight:600; cursor:pointer;" onclick="confirmDelete(event)">Delete</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function confirmDelete(event) {
+          event.preventDefault();
+
+          Swal.fire({
+            icon: 'question',
+            title: 'Confirm Delete Party',
+            text: 'Are you sure you want to Delete a Party?',
+            showCancelButton: true,
+            confirmButtonColor: '#7c3aed',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              event.target.closest('form').submit();
+            }
+          });
+        }
+
+  </script>
+</body>
+</html> 

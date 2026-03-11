@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: SnapVote
+
+  data:
+    mongodb:
+      database: VoteDB
+      auto-index-creation: true
+#      uri: mongodb+srv://stduy21:F1m0HBoVlfWG7Mif@cluster0.wvhfwee.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      uri: mongodb+srv://stduy21:F1m0HBoVlfWG7Mif@cluster0.wvhfwee.mongodb.net/?appName=Cluster0
+  main:
+    allow-circular-references: true
+
+
+
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+

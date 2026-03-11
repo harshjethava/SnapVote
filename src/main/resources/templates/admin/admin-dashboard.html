@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .main-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(80, 80, 160, 0.15);
+      max-width: 1000px;
+      min-width: 1000px;
+      margin: 2.5vh auto;
+      padding: 2rem 2.5rem 2rem 2.5rem;
+      position: relative;
+      min-height: 80vh;
+      max-height: 555px
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #7c3aed;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav {
+      display: flex;
+      gap: 2.5rem;
+    }
+    .nav a {
+      text-decoration: none;
+      color: #6d28d9;
+      font-weight: 500;
+      font-size: 1.08rem;
+      transition: color 0.2s;
+    }
+    .nav a:hover {
+      color: #a78bfa;
+    }
+    .admin-content {
+      margin-top: 2.5rem;
+      color: #4b5563;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+  </style>
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>  
+  <div class="main-card">
+    <div class="header">
+      <div class="logo">
+           ADMIN
+      </div>
+      <nav class="nav">
+        <a th:href="@{/admin/admin-dashboard}" th:style="${activePage == 'home'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Home</a>
+        <a th:href="@{/admin/All-user}" th:style="${activePage == 'users'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">User Detail</a>
+        <a th:href="@{/admin/toggle-vote}" th:style="${activePage == 'voting'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Voting</a>
+        <a th:href="@{/admin/add-party}" th:style="${activePage == 'add-party'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Add Party</a>
+        <a th:href="@{/admin/party-detail}" th:style="${activePage == 'party-detail'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Party Detail</a>
+        <a th:href="@{/admin/contact-messages}" th:style="${activePage == 'contact'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">Contact</a>
+        <a th:href="@{/admin/about}" th:style="${activePage == 'about'} ? 'font-weight: 700; border-bottom: 2px solid #7c3aed;' : ''">About</a>
+        <a th:href="@{/admin/logout}">Logout</a>
+
+      </nav>
+
+    </div>
+    <div class="admin-content">
+      <!-- <h2 style="color:#7c3aed;">Welcome to the Admin Dashboard</h2>
+      <p>Use the navigation above to manage users, add parties, or return home.</p> -->
+      <div style="display: flex; flex-wrap: nowrap; gap: 2rem; margin-top: 2.5rem; width: 100%;">
+        <!-- Total Users -->
+        <div style="background:#ede9fe; border-radius:16px; box-shadow:0 2px 8px #a78bfa22; padding:1.5rem 2.2rem; flex:1 1 0; text-align:center; min-width:0;">
+          <div style="color:#7c3aed; font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;">Total Users</div>
+          <div style="font-size:2.1rem; font-weight:800; color:#4b5563;" th:text="${totalUsers}">0</div>
+        </div>
+        <!-- Users Voted -->
+        <div style="background:#e0f2fe; border-radius:16px; box-shadow:0 2px 8px #38bdf822; padding:1.5rem 2.2rem; flex:1 1 0; text-align:center; min-width:0;">
+          <div style="color:#0284c7; font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;">Users Voted</div>
+          <div style="font-size:2.1rem; font-weight:800; color:#0ea5e9;" th:text="${usersVoted}">0</div>
+          <div style="font-size:1rem; color:#0284c7; margin-top:0.2rem;" th:text="${usersVotedPercent} + '%'">0%</div>
+        </div>
+        <!-- Users Not Voted -->
+        <div style="background:#fef9c3; border-radius:16px; box-shadow:0 2px 8px #fde04722; padding:1.5rem 2.2rem; flex:1 1 0; text-align:center; min-width:0;">
+          <div style="color:#b45309; font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;">Users Not Voted</div>
+          <div style="font-size:2.1rem; font-weight:800; color:#ca8a04;" th:text="${usersNotVoted}">0</div>
+          <div style="font-size:1rem; color:#b45309; margin-top:0.2rem;" th:text="${usersNotVotedPercent} + '%'">0%</div>
+        </div>
+        <!-- Total Parties -->
+        <div style="background:#f3f4f6; border-radius:16px; box-shadow:0 2px 8px #a1a1aa22; padding:1.5rem 2.2rem; flex:1 1 0; text-align:center; min-width:0;">
+          <div style="color:#7c3aed; font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;">Total Parties</div>
+          <div style="font-size:2.1rem; font-weight:800; color:#7c3aed;" th:text="${totalParties}">0</div>
+        </div>
+      </div>
+      <!-- Winner & Party Table Horizontal Layout -->
+      <div th:if="${winnerDeclared}" style="display: flex; flex-direction: row; gap: 2.5rem; align-items: flex-start; justify-content: center; margin-top: 2.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+        <!-- Winner Box -->
+        <div style="background:#ede9fe; border-radius:14px; box-shadow:0 2px 8px rgba(124,58,237,0.10); padding:2.2rem 2.5rem; min-width:260px; max-width:340px; width:100%; text-align:center; display:flex; flex-direction:column; align-items:center;">
+          <span style="color:#7c3aed; font-size:1.2rem; font-weight:700; margin-bottom:0.7rem;">🏆 Winner Declared!</span>
+          <span style="color:#4b5563; font-size:1.08rem;">The winner is:</span>
+          <span style="color:#7c3aed; font-size:2rem; font-weight:900; letter-spacing:1px; margin-top:0.5rem;" th:text="${winnerName}">Winner Name</span>
+        </div>
+        <!-- Party Votes Table -->
+        <div style="max-width:100%; overflow-x:auto; max-height:250px; overflow-y:auto; flex:1; min-width:320px;">
+          <table style="min-width:400px; width:100%; max-width:700px; margin:0 auto; border-collapse:collapse; background:#f3f4f6; border-radius:14px; overflow:hidden; box-shadow:0 2px 8px #a1a1aa22;">
+            <thead>
+              <tr>
+                <th style="background:#7c3aed; color:#fff; padding:12px; font-size:1.08rem; ">Party Name</th>
+                <th style="background:#7c3aed; color:#fff; padding:12px; font-size:1.08rem;">Votes</th>
+                <th style="background:#7c3aed; color:#fff; padding:12px; font-size:1.08rem;">Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="party : ${parties}">
+                <td th:text="${party.name}" style="padding:12px; text-align:center; color:#4b5563; font-weight:600;">Party Name</td>
+                <td th:text="${party.voteCount}" style="padding:12px; text-align:center; color:#7c3aed; font-weight:700;">0</td>
+                <td th:text="${party.votePercent} + '%'" style="padding:12px; text-align:center; color:#6d28d9; font-weight:600;">0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Party Votes Table (when no winner) -->
+      <div th:unless="${winnerDeclared}" style="margin-top:2.5rem; max-width:100%; overflow-x:auto; max-height:250px; overflow-y:auto;">
+        <table style="min-width:600px; width:100%; max-width:700px; margin:0 auto; border-collapse:collapse; background:#f3f4f6; border-radius:14px; overflow:hidden; box-shadow:0 2px 8px #a1a1aa22;">
+          <thead>
+            <tr>
+              <th style="background:#7c3aed; color:#fff; padding:12px; font-size:1.08rem; ">Party Name</th>
+              <th style="background:#7c3aed; color:#fff; padding:12px; font-size:1.08rem;">Votes</th>
+              <th style="background:#7c3aed; color:#fff; padding:12px; font-size:1.08rem;">Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="party : ${parties}">
+              <td th:text="${party.name}" style="padding:12px; text-align:center; color:#4b5563; font-weight:600;">Party Name</td>
+              <td th:text="${party.voteCount}" style="padding:12px; text-align:center; color:#7c3aed; font-weight:700;">0</td>
+              <td th:text="${party.votePercent} + '%'" style="padding:12px; text-align:center; color:#6d28d9; font-weight:600;">0%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
