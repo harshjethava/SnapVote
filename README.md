@@ -1,0 +1,2 @@
+# SnapVote
+Online Voting Platform 
