@@ -17,6 +17,4 @@ brevo:
     email: ${BREVO_SENDER_EMAIL:}
 
 server:
-  port: 8080
-  servlet:
-    context-path: /
+  port: ${PORT:8080}

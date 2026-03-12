@@ -6,11 +6,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import jakarta.annotation.PostConstruct;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -19,78 +16,80 @@ public class EmailService {
     @Value("${brevo.api.key:}")
     private String brevoApiKey;
 
-    @Value("${brevo.sender.email:harsh21jethava@gmail.com}")
+    @Value("${brevo.sender.email}")
     private String senderEmail;
-
-    private final RestTemplate restTemplate = new RestTemplate();
 
     private static final String BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 
-    @PostConstruct
-    public void init() {
-        if (brevoApiKey == null || brevoApiKey.isBlank()) {
-            System.out.println("⚠️ [EmailService] BREVO_API_KEY is NOT set! Emails will not be sent.");
-        } else {
-            System.out.println("✅ [EmailService] BREVO_API_KEY is set. Key starts with: "
-                    + brevoApiKey.substring(0, Math.min(10, brevoApiKey.length())) + "...");
-            System.out.println("✅ [EmailService] Sender email: " + senderEmail);
-        }
-    }
+    private final RestTemplate restTemplate = new RestTemplate();
 
-    // Used for sending bulk reminder emails (plain text)
-    public void sendMail(String[] to, String sub, String body) {
+    public void sendMail(String[] to, String subject, String body) {
+
         if (to == null || to.length == 0) {
-            log.info("No recipients found for email: {}", sub);
+            log.warn("No recipients found for email: {}", subject);
             return;
         }
+
         for (String recipient : to) {
-            sendEmailInternal(recipient, sub, "<p>" + body + "</p>");
+            sendEmailInternal(recipient, subject, "<p>" + body + "</p>");
         }
-        log.info("Reminder email dispatched to {} recipients.", to.length);
+
+        log.info("Reminder email sent to {} recipients.", to.length);
     }
 
-    // Used for OTP emails (HTML)
+    @PostConstruct
+    public void init() {
+
+        if (brevoApiKey == null || brevoApiKey.isBlank()) {
+            log.warn("BREVO_API_KEY is NOT configured. Email sending will fail.");
+        } else {
+            log.info("Brevo API key loaded successfully.");
+        }
+
+        log.info("Sender email configured as: {}", senderEmail);
+    }
+
     public void sendEmailForOtp(String to, String subject, String htmlBody) {
         sendEmailInternal(to, subject, htmlBody);
     }
 
     private void sendEmailInternal(String to, String subject, String htmlContent) {
+
+        if (brevoApiKey == null || brevoApiKey.isBlank()) {
+            log.error("Brevo API key is missing. Cannot send email.");
+            return;
+        }
+
         try {
-            if (brevoApiKey == null || brevoApiKey.isBlank()) {
-                log.error("Brevo API key is not configured! Set the BREVO_API_KEY environment variable.");
-                return;
-            }
 
-            Map<String, Object> sender = new HashMap<>();
-            sender.put("name", "SnapVote");
-            sender.put("email", senderEmail);
+            Map<String, Object> sender = Map.of(
+                    "name", "SnapVote",
+                    "email", senderEmail);
 
-            Map<String, Object> recipient = new HashMap<>();
-            recipient.put("email", to);
+            Map<String, Object> recipient = Map.of(
+                    "email", to);
 
-            Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("sender", sender);
-            requestBody.put("to", List.of(recipient));
-            requestBody.put("subject", subject);
-            requestBody.put("htmlContent", htmlContent);
+            Map<String, Object> body = new HashMap<>();
+            body.put("sender", sender);
+            body.put("to", List.of(recipient));
+            body.put("subject", subject);
+            body.put("htmlContent", htmlContent);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("api-key", brevoApiKey);
+            headers.add("api-key", brevoApiKey);
 
-            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-            ResponseEntity<String> response = restTemplate.postForEntity(BREVO_API_URL, entity, String.class);
-            log.info("Brevo Response: {}", response.getBody());
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 
-            if (response.getStatusCode().is2xxSuccessful()) {
-                System.out.println("✅ Email sent successfully via Brevo to: " + to);
-            } else {
-                log.error("Brevo API returned non-OK response: {} - {}", response.getStatusCode(), response.getBody());
-            }
+            ResponseEntity<String> response = restTemplate.postForEntity(BREVO_API_URL, request, String.class);
 
-        } catch (Exception e) {
-            System.out.println("❌ Failed to send OTP email: " + e.getMessage());
-            log.error("Brevo email send failed", e);
+            log.info("Brevo response status: {}", response.getStatusCode());
+            log.info("Brevo response body: {}", response.getBody());
+
+        } catch (Exception ex) {
+
+            log.error("Failed to send email via Brevo", ex);
+
         }
     }
 }
