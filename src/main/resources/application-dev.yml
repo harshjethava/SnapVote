@@ -6,16 +6,26 @@ spring:
     mongodb:
       database: VoteDB
       auto-index-creation: true
-#      uri: mongodb+srv://stduy21:F1m0HBoVlfWG7Mif@cluster0.wvhfwee.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       uri: mongodb+srv://stduy21:F1m0HBoVlfWG7Mif@cluster0.wvhfwee.mongodb.net/?appName=Cluster0
   main:
     allow-circular-references: true
 
-
-
+  mail:
+    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
+    port: ${SPRING_MAIL_PORT:587}
+    username: ${SPRING_MAIL_USERNAME:stduy21@gmail.com}
+    password: ${SPRING_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
 
 server:
   port: 8080
   servlet:
     context-path: /
-
