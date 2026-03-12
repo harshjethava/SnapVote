@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.annotation.PostConstruct;
+
 @Service
 @Slf4j
 public class EmailService {
@@ -23,6 +25,16 @@ public class EmailService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     private static final String BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
+
+    @PostConstruct
+    public void init() {
+        if (brevoApiKey == null || brevoApiKey.isBlank()) {
+            System.out.println("⚠️ [EmailService] BREVO_API_KEY is NOT set! Emails will not be sent.");
+        } else {
+            System.out.println("✅ [EmailService] BREVO_API_KEY is set. Key starts with: " + brevoApiKey.substring(0, Math.min(10, brevoApiKey.length())) + "...");
+            System.out.println("✅ [EmailService] Sender email: " + senderEmail);
+        }
+    }
 
     // Used for sending bulk reminder emails (plain text)
     public void sendMail(String[] to, String sub, String body) {
