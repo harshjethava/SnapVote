@@ -17,7 +17,7 @@ public class EmailService {
     @Value("${brevo.api.key:}")
     private String brevoApiKey;
 
-    @Value("${brevo.sender.email:stduy21@gmail.com}")
+    @Value("${brevo.sender.email:harsh21jethava@gmail.com}")
     private String senderEmail;
 
     private final RestTemplate restTemplate = new RestTemplate();
