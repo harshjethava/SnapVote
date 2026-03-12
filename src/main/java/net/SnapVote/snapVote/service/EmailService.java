@@ -31,7 +31,8 @@ public class EmailService {
         if (brevoApiKey == null || brevoApiKey.isBlank()) {
             System.out.println("⚠️ [EmailService] BREVO_API_KEY is NOT set! Emails will not be sent.");
         } else {
-            System.out.println("✅ [EmailService] BREVO_API_KEY is set. Key starts with: " + brevoApiKey.substring(0, Math.min(10, brevoApiKey.length())) + "...");
+            System.out.println("✅ [EmailService] BREVO_API_KEY is set. Key starts with: "
+                    + brevoApiKey.substring(0, Math.min(10, brevoApiKey.length())) + "...");
             System.out.println("✅ [EmailService] Sender email: " + senderEmail);
         }
     }
@@ -79,6 +80,7 @@ public class EmailService {
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
             ResponseEntity<String> response = restTemplate.postForEntity(BREVO_API_URL, entity, String.class);
+            log.info("Brevo Response: {}", response.getBody());
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 System.out.println("✅ Email sent successfully via Brevo to: " + to);
