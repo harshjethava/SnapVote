@@ -14,7 +14,7 @@ brevo:
   api:
     key: ${BREVO_API_KEY:}
   sender:
-    email: ${BREVO_SENDER_EMAIL:stduy21@gmail.com}
+    email: ${BREVO_SENDER_EMAIL:harsh21jethava@gmail.com}
 
 server:
   port: 8080
