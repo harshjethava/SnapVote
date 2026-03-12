@@ -12,9 +12,9 @@ spring:
 
 brevo:
   api:
-    key: ${BREVO_API_KEY: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}
+    key: ${BREVO_API_KEY:}
   sender:
-    email: ${BREVO_SENDER_EMAIL:harsh21jethava@gmail.com}
+    email: ${BREVO_SENDER_EMAIL:}
  
 server:
   port: ${PORT:8080}
