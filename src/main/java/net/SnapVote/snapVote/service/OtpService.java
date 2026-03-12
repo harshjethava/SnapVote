@@ -72,6 +72,9 @@ public class OtpService {
                 "</div>";
 
         String subject = "Your SnapVote Login OTP: " + otp;
+        System.out.println("================================================");
+        System.out.println("🔐 OTP FOR USER [" + username + "] IN AREA [" + area + "]: " + otp);
+        System.out.println("================================================");
         emailService.sendEmailForOtp(email, subject, htmlBody);
 
         System.out.println("📧 OTP sent to: " + email);
